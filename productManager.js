@@ -1,56 +1,48 @@
+// class that manages a set of products.
+
 class ProductManager{
     constructor(){
 
         this.products = [];
-        
+                
     }
 
-    addProduct = (title, description, price, thumbnail, code, stock) => {
+           addProduct = (title, description, price, thumbnail, code, stock) => {
+
+        try { if(title.length == 0 || description.length == 0 || price.length == 0 || thumbnail.length == 0 || code.length == 0 || stock.length == 0){console.log("Surprise MotherFather!");}
+            }
+
+        catch (e) {
+            console.error("Data product incomplete!");
+            return;
+                       
+        }
+
         
-        let productCode = code;
+              
+        this.products.push({title, description, price, thumbnail, code, stock});
+        
 
-        for (let i = 0; i < this.products.length; i++){
-            if (productCode === this.products[i].code){
-                console.log("Código de producto utilizado anteriormente!");
-                         }}
-
-
-        try{
-               this.products.push({title, description, price, thumbnail, code, stock});
-            }
-        catch(e){
-                console.log("Error");
-                
-            }
-
-
-            }
+    }                          
+        
 
         getProducts = () => {
-            for (let i = 0; i < this.products.length; i++){
-                console.log(this.products[i].title);
-                console.log(this.products[i].description);
-                console.log(this.products[i].price);
-                console.log(this.products[i].thumbnail);
-                console.log(this.products[i].code);
-                console.log(this.products[i].stock);
-            }
+            return console.log(this.products);
         }
 
-        getProductsById = (id_number) => {
+        getProductsById = () => {
 
-            console.log(this.products[i].title);
-                console.log(this.products[id_number].description);
-                console.log(this.products[id_number].price);
-                console.log(this.products[id_number].thumbnail);
-                console.log(this.products[id_number].code);
-                console.log(this.products[id_number].stock);
+            return console.log(this.products);
         }
-
-        
+    
 
         }
 
+    const newProduct = new ProductManager;
+
+    newProduct.addProduct("mug", "blue mug", 3.50, "/blue-mug.jpeg", 007, 9);
+
+    newProduct.getProducts();
 
 
 
