@@ -6,7 +6,19 @@ class ProductManager{
         this.products = [];
         this.id = 0;
         
+        this.path = "./";
+        
     }
+
+        createfile (fileName) {
+            const fs = require('fs');
+            fs.writeFileSync(this.path + fileName, "Surprise MotherFather!");
+            console.log("File created!");
+        }
+
+        addProductToFile(product){
+            
+        }
 
                
         addProduct (title, description, price, thumbnail, code, stock) {
@@ -70,13 +82,7 @@ class ProductManager{
     console.log("--------------TESTS-------------------");
 
     const newProduct = new ProductManager;
-    newProduct.getProducts();
-    newProduct.addProduct("producto prueba", "Este es un producto prueba", 200, "sin imagen", "abc123", 25);
-    newProduct.getProducts();
-    newProduct.addProduct("producto prueba", "Este es un producto prueba", 200, "sin imagen", "abc123", 25);
-    newProduct.getProducts();
-    newProduct.getProductsById(0);
-    newProduct.getProductsById(9);
+    newProduct.createfile("test2");
   
     
 
