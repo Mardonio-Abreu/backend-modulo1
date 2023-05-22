@@ -1,12 +1,19 @@
-  
-    {
-      "id": 0,
-      "title": "Goblin mug",
-      "description": "green mug",
-      "price": 3.50,
-      "thumbnail": "img/green-mug.jpeg",
-      "code":"ggm01",
-      "stock": 10
-    }
-
-   
+[
+  {
+    "title": null,
+    "description": null,
+    "price": null,
+    "thumbnail": null,
+    "code": null,
+    "stock": null
+  },
+  {
+    "title": "Smurf mug",
+    "description": "blue mug",
+    "price": 3.5,
+    "thumbnail": "img/blue-mug.jpeg",
+    "code": "sbm",
+    "stock": 3,
+    "id": 0
+  }
+]

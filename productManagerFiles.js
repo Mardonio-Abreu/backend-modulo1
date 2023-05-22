@@ -16,7 +16,6 @@ class ProductManager{
                 let catalogueJSON = fs.readFileSync(fileName, 'utf-8');
                 let catalogue = JSON.parse(catalogueJSON);
                 console.log(catalogue);
-                console.log(catalogue.index);
                 return catalogue;
             }else{
                 console.log("File not found!");
@@ -27,8 +26,10 @@ class ProductManager{
 
         createfile (fileName) {
             const fs = require('fs');
+            let catalogue = [];
             const nullProduct = ({title: null, description: null, price: null, thumbnail: null, code: null, stock: null});
-            const jsonData = JSON.stringify(nullProduct, null, 2);
+            catalogue.push(nullProduct);
+            const jsonData = JSON.stringify(catalogue, null, 2);
             fs.writeFileSync(this.path + fileName, jsonData);
             console.log("File created!");
         }
@@ -49,9 +50,9 @@ class ProductManager{
 
         let flag = true;
 
-        let catalogue = this.getCatalogue(this.path + this.file);
+        let catalogue = this.getCatalogue(this.path + this.file)
 
-        catalogue.forEach((product)=>{
+        catalogue.map((product)=>{
             if (product.code === code){
                 flag = false;
                 console.log("Code already in use!");
@@ -101,9 +102,15 @@ class ProductManager{
     console.log("--------------TESTS-------------------");
 
     const newProduct = new ProductManager;
-    newProduct.createfile("test2");
+    newProduct.createfile("data.json");
+    console.log("empty catalogue");
     newProduct.getCatalogue("data.json");
-  
+    console.log("add product Smurf mug");
+    newProduct.addProduct("Smurf mug", "blue mug", 3.50, "img/blue-mug.jpeg", "sbm", 3);
+    console.log("add repeated product Smurf mug");
+    newProduct.addProduct("Smurf mug", "blue mug", 3.50, "img/blue-mug.jpeg", "sbm", 3);
+    console.log("last get catalogue call");
+    newProduct.getCatalogue("data.json");
     
 
 
