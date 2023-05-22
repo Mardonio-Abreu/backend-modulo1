@@ -3,8 +3,6 @@
 class ProductManager{
     constructor(){
 
-        this.products = [];
-        this.id = 0;
         this.file = "data.json";
         this.path = "./";
         
@@ -27,8 +25,6 @@ class ProductManager{
         createfile (fileName) {
             const fs = require('fs');
             let catalogue = [];
-            const nullProduct = ({title: null, description: null, price: null, thumbnail: null, code: null, stock: null});
-            catalogue.push(nullProduct);
             const jsonData = JSON.stringify(catalogue, null, 2);
             fs.writeFileSync(this.path + fileName, jsonData);
             console.log("File created!");
@@ -50,7 +46,7 @@ class ProductManager{
 
         let flag = true;
 
-        let catalogue = this.getCatalogue(this.path + this.file)
+        let catalogue = this.getCatalogue(this.path + this.file);
 
         catalogue.map((product)=>{
             if (product.code === code){
@@ -60,8 +56,17 @@ class ProductManager{
         })
 
         if (flag){
+        
+        let id;
 
-        let id = this.id++;
+        try {id = catalogue.slice(-1)[0].id;}
+
+        catch(error){
+            id = 0;
+        }finally{id++}
+       
+
+
         catalogue.push({title, description, price, thumbnail, code, stock, id})
         const jsonData = JSON.stringify(catalogue, null, 2);
         fs.writeFileSync(this.path + this.file, jsonData);
@@ -70,16 +75,19 @@ class ProductManager{
                 
         }                          
         
-        getProducts (fileName) {
-            let catalogue = this.getCatalogue(fileName);
+        getProducts () {
+            let catalogue = this.getCatalogue(this.path + this.file);
             return console.log(catalogue);
         }
 
         getProductsById (id) {
+            const fs = require('fs');
 
+            let catalogue = this.getCatalogue(this.path + this.file); 
+            
             let flag = false;
 
-            this.products.forEach((product)=>{
+            catalogue.map((product)=>{
                                              
                 if(product.id === id){
                     console.log(product);
@@ -95,6 +103,26 @@ class ProductManager{
             }
             
         }
+
+        deleteProduct (id){
+            const fs = require('fs');
+        
+            let catalogue = this.getCatalogue(this.path + this.file); 
+        
+            const index = catalogue.findIndex(product => product.id === id);
+
+            console.log("aquí toy!!!!!!!!!!!!!!!!!! " + index);
+
+            if (index !== -1){
+                let newCatalogue = [...catalogue.slice(0, index), ...catalogue.slice(index + 1)];
+                const jsonData = JSON.stringify(newCatalogue, null, 2);
+                fs.writeFileSync(this.path + this.file, jsonData);
+                console.log("Product erased!");
+            }else{
+                console.log("product not found!");
+            }
+       
+        }
     
 
         }
@@ -104,13 +132,9 @@ class ProductManager{
     const newProduct = new ProductManager;
     newProduct.createfile("data.json");
     console.log("empty catalogue");
-    newProduct.getCatalogue("data.json");
-    console.log("add product Smurf mug");
-    newProduct.addProduct("Smurf mug", "blue mug", 3.50, "img/blue-mug.jpeg", "sbm", 3);
-    console.log("add repeated product Smurf mug");
-    newProduct.addProduct("Smurf mug", "blue mug", 3.50, "img/blue-mug.jpeg", "sbm", 3);
-    console.log("last get catalogue call");
-    newProduct.getCatalogue("data.json");
+    newProduct.addProduct("Gandalf mug", "grey mug", 3.50, "img/grey-mug.jpeg", "ggm", 3);
+    newProduct.deleteProduct(1);
+    newProduct.getProducts();
     
 
 
