@@ -1,0 +1,12 @@
+  
+    {
+      "id": 0,
+      "title": "Goblin mug",
+      "description": "green mug",
+      "price": 3.50,
+      "thumbnail": "img/green-mug.jpeg",
+      "code":"ggm01",
+      "stock": 10
+    }
+
+   
