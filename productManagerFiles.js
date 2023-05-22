@@ -5,6 +5,7 @@ class ProductManager{
 
         this.file = "data.json";
         this.path = "./";
+        this.createfile(this.file);
         
     }
 
@@ -90,9 +91,8 @@ class ProductManager{
             catalogue.map((product)=>{
                                              
                 if(product.id === id){
-                    console.log(product);
                     flag = true;
-                    return;
+                    console.log(product);
                     }
                 
             }
@@ -111,8 +111,6 @@ class ProductManager{
         
             const index = catalogue.findIndex(product => product.id === id);
 
-            console.log("aquí toy!!!!!!!!!!!!!!!!!! " + index);
-
             if (index !== -1){
                 let newCatalogue = [...catalogue.slice(0, index), ...catalogue.slice(index + 1)];
                 const jsonData = JSON.stringify(newCatalogue, null, 2);
@@ -122,6 +120,23 @@ class ProductManager{
                 console.log("product not found!");
             }
        
+        }
+
+        updateProduct(id, field, fieldValue){
+            const fs = require('fs');
+            let catalogue = this.getCatalogue(this.path + this.file);
+            const index = catalogue.findIndex(product => product.id === id);
+            if(index !== -1){
+                                            
+                catalogue[index][field] = fieldValue;
+                const jsonData = JSON.stringify(catalogue, null, 2);
+                fs.writeFileSync(this.path + this.file, jsonData);
+                console.log("Product updated!");
+
+            }else{
+                console.log("Product not found!");
+            }
+
         }
     
 
@@ -133,9 +148,9 @@ class ProductManager{
     newProduct.createfile("data.json");
     console.log("empty catalogue");
     newProduct.addProduct("Gandalf mug", "grey mug", 3.50, "img/grey-mug.jpeg", "ggm", 3);
-    newProduct.deleteProduct(1);
+    newProduct.getProductsById(1);
+    newProduct.updateProduct(1, "description","Grey mug");
     newProduct.getProducts();
-    
 
 
 
