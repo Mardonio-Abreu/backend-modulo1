@@ -14,7 +14,6 @@ class ProductManager{
             if(fs.existsSync(this.path + fileName)){
                 let catalogueJSON = fs.readFileSync(fileName, 'utf-8');
                 let catalogue = JSON.parse(catalogueJSON);
-                console.log(catalogue);
                 return catalogue;
             }else{
                 console.log("File not found!");
@@ -28,8 +27,7 @@ class ProductManager{
             let catalogue = [];
             const jsonData = JSON.stringify(catalogue, null, 2);
             fs.writeFileSync(this.path + fileName, jsonData);
-            console.log("File created!");
-        }
+            }
 
                        
         addProduct (title, description, price, thumbnail, code, stock) {
@@ -145,12 +143,26 @@ class ProductManager{
     console.log("--------------TESTS-------------------");
 
     const newProduct = new ProductManager;
-    newProduct.createfile("data.json");
-    console.log("empty catalogue");
-    newProduct.addProduct("Gandalf mug", "grey mug", 3.50, "img/grey-mug.jpeg", "ggm", 3);
-    newProduct.getProductsById(1);
-    newProduct.updateProduct(1, "description","Grey mug");
     newProduct.getProducts();
+    newProduct.addProduct("producto prueba",
+        "Este es un producto prueba",
+        200,
+        "Sin imagen",
+        "abc123",
+        25
+        );
+    newProduct.getProducts();
+    console.log("Get products by id");
+    newProduct.getProductsById(1);
+    console.log("Get products by wrong id");
+    newProduct.getProductsById(3);
+    newProduct.updateProduct(1, "description", "Se cambio la descripción");
+    newProduct.getProductsById(1);
+    newProduct.deleteProduct(3);
+    newProduct.deleteProduct(1);
+    newProduct.getProducts();
+    
+    
 
 
 
