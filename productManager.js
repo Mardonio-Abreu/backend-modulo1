@@ -1,4 +1,5 @@
-// class that manages a set of products.
+//Primer desafio
+// class that manages a set of products
 
 class ProductManager{
     constructor(){
