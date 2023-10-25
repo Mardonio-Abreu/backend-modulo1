@@ -1,16 +1,38 @@
-//Primer desafio
-// class that manages a set of products
+// class that manages a set of products.
 
 class ProductManager{
     constructor(){
 
-        this.products = [];
-        this.id = 0;
+        this.file = "data.json";
+        this.path = "./";
+        this.createfile(this.file);
         
     }
 
-               
+        getCatalogue (fileName){
+            const fs = require('fs');
+            if(fs.existsSync(this.path + fileName)){
+                let catalogueJSON = fs.readFileSync(fileName, 'utf-8');
+                let catalogue = JSON.parse(catalogueJSON);
+                return catalogue;
+            }else{
+                console.log("File not found!");
+                
+            }
+
+        }
+
+        createfile (fileName) {
+            const fs = require('fs');
+            let catalogue = [];
+            const jsonData = JSON.stringify(catalogue, null, 2);
+            fs.writeFileSync(this.path + fileName, jsonData);
+            }
+
+                       
         addProduct (title, description, price, thumbnail, code, stock) {
+            const fs = require('fs');
+        
 
         try { if(title.length == 0 || description.length == 0 || price.length == 0 || thumbnail.length == 0 || code.length == 0 || stock.length == 0){console.log("Surprise MotherFather!");}
             }
@@ -23,7 +45,9 @@ class ProductManager{
 
         let flag = true;
 
-        this.products.forEach((product)=>{
+        let catalogue = this.getCatalogue(this.path + this.file);
+
+        catalogue.map((product)=>{
             if (product.code === code){
                 flag = false;
                 console.log("Code already in use!");
@@ -31,29 +55,42 @@ class ProductManager{
         })
 
         if (flag){
+        
+        let id;
 
-        let id = this.id++;
-        this.products.push({title, description, price, thumbnail, code, stock, id})
+        try {id = catalogue.slice(-1)[0].id;}
 
+        catch(error){
+            id = 0;
+        }finally{id++}
+       
+
+
+        catalogue.push({title, description, price, thumbnail, code, stock, id})
+        const jsonData = JSON.stringify(catalogue, null, 2);
+        fs.writeFileSync(this.path + this.file, jsonData);
+        console.log("File updated successfully!")
         }
                 
         }                          
         
-
         getProducts () {
-            return console.log(this.products);
+            let catalogue = this.getCatalogue(this.path + this.file);
+            return console.log(catalogue);
         }
 
         getProductsById (id) {
+            const fs = require('fs');
 
+            let catalogue = this.getCatalogue(this.path + this.file); 
+            
             let flag = false;
 
-            this.products.forEach((product)=>{
+            catalogue.map((product)=>{
                                              
                 if(product.id === id){
-                    console.log(product);
                     flag = true;
-                    return;
+                    console.log(product);
                     }
                 
             }
@@ -64,6 +101,41 @@ class ProductManager{
             }
             
         }
+
+        deleteProduct (id){
+            const fs = require('fs');
+        
+            let catalogue = this.getCatalogue(this.path + this.file); 
+        
+            const index = catalogue.findIndex(product => product.id === id);
+
+            if (index !== -1){
+                let newCatalogue = [...catalogue.slice(0, index), ...catalogue.slice(index + 1)];
+                const jsonData = JSON.stringify(newCatalogue, null, 2);
+                fs.writeFileSync(this.path + this.file, jsonData);
+                console.log("Product erased!");
+            }else{
+                console.log("product not found!");
+            }
+       
+        }
+
+        updateProduct(id, field, fieldValue){
+            const fs = require('fs');
+            let catalogue = this.getCatalogue(this.path + this.file);
+            const index = catalogue.findIndex(product => product.id === id);
+            if(index !== -1){
+                                            
+                catalogue[index][field] = fieldValue;
+                const jsonData = JSON.stringify(catalogue, null, 2);
+                fs.writeFileSync(this.path + this.file, jsonData);
+                console.log("Product updated!");
+
+            }else{
+                console.log("Product not found!");
+            }
+
+        }
     
 
         }
@@ -72,13 +144,24 @@ class ProductManager{
 
     const newProduct = new ProductManager;
     newProduct.getProducts();
-    newProduct.addProduct("producto prueba", "Este es un producto prueba", 200, "sin imagen", "abc123", 25);
+    newProduct.addProduct("producto prueba",
+        "Este es un producto prueba",
+        200,
+        "Sin imagen",
+        "abc123",
+        25
+        );
     newProduct.getProducts();
-    newProduct.addProduct("producto prueba", "Este es un producto prueba", 200, "sin imagen", "abc123", 25);
+    console.log("Get products by id");
+    newProduct.getProductsById(1);
+    console.log("Get products by wrong id");
+    newProduct.getProductsById(3);
+    newProduct.updateProduct(1, "description", "Se cambio la descripción");
+    newProduct.getProductsById(1);
+    newProduct.deleteProduct(3);
+    newProduct.deleteProduct(1);
     newProduct.getProducts();
-    newProduct.getProductsById(0);
-    newProduct.getProductsById(9);
-  
+    
     
 
 
