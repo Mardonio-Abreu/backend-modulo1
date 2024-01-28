@@ -17,11 +17,11 @@ Realizar una clase “ProductManager” que gestione un conjunto de productos
 
 ✓ Debe contar con un método “getProducts” el cual debe devolver el arreglo con todos los productos creados hasta ese momento
 
-Debe contar con un método “getProductById” el cual debe buscar en el arreglo el producto que coincida con el id
+✓ Debe contar con un método “getProductById” el cual debe buscar en el arreglo el producto que coincida con el id
 
-En caso de no coincidir ningún id, mostrar en consola un error “Not found”
+✓ En caso de no coincidir ningún id, mostrar en consola un error “Not found”
 
-Author Mardonio Abreu
+Author Mardonio Abreu 
 */
 
 class ProductManager {
@@ -58,23 +58,46 @@ class ProductManager {
     }
 
     getProducts () {
-        console.log(this.productArray);
+        return this.productArray;
     }
 
     getProductById (id) {
         const itemIndex = this.productArray.findIndex(itemIndex => itemIndex.id === id);
-        console.log(this.productArray[itemIndex]);
+        if (itemIndex != -1){
+            return (this.productArray[itemIndex]);
+        } else {
+            console.log(`ID: ${id} not found!`);
+        }
+       
     }
 }
 
-//Tests
-
+//Tests -------------------------------------------------------------------------------------------------------------------
+//Se creará una instancia de la clase “ProductManager”
 const productManagerOne = new ProductManager();
 
+//Se llamará “getProducts” recién creada la instancia, debe devolver un arreglo vacío []
+console.log(productManagerOne.getProducts());
+
+/*
+Se llamará al método “addProduct” con los campos:
+title: “producto prueba”
+description:”Este es un producto prueba”
+price:200,
+thumbnail:”Sin imagen”
+code:”abc123”,
+stock:25
+
+El objeto debe agregarse satisfactoriamente con un id generado automáticamente SIN REPETIRSE
+*/
 productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc123",25);
-productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc124",25);
-productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc125",25);
 
-productManagerOne.getProducts();
+//Se llamará el método “getProducts” nuevamente, esta vez debe aparecer el producto recién agregado
+console.log(productManagerOne.getProducts());
 
-productManagerOne.getProductById(1);
+//Se llamará al método “addProduct” con los mismos campos de arriba, debe arrojar un error porque el código estará repetido.
+productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc123",25);
+
+//Se evaluará que getProductById devuelva error si no encuentra el producto o el producto en caso de encontrarlo
+console.log(productManagerOne.getProductById(0));
+productManagerOne.getProductById(6);
