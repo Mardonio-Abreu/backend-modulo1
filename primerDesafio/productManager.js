@@ -22,7 +22,7 @@ NO DEBE BORRARSE SU ID
 Debe tener un método deleteProduct, el cual debe recibir un id y debe eliminar el producto que tenga ese id en el archivo.
 */
 
-const fs = require(fs);
+const fs = require('fs');
 class ProductManager {
 
         
@@ -33,7 +33,12 @@ class ProductManager {
 
         this.path = "/";
 
-        this.fs.open("newItemsList");
+        this.flag = "a";
+
+        fs.open(this.path, this.flag, (err) => {
+            err ? console.log(`Error writing the file: ${err}`) : console.log("")
+
+        });
         
         this.productArray = [];
 
