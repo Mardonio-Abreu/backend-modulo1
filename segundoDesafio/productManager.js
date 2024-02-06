@@ -29,41 +29,35 @@ Debe tener un método deleteProduct, el cual debe recibir un id y debe eliminar 
 
 const fs = require('fs');
 class ProductManager {
-
-        
-
+       
     static id = 0;
 
-    constructor () {
+    constructor (file) {
+        this.path = file;
+        this.createFile();
+        }
 
-        this.productArray = [];
-        this. data = JSON.stringify(this.productArray);
-        this.path = "itemList.json";
-        fs.writeFile, (this.path, this.data, (err) => {
-            if(err) return console.log(`Error while creating file: ${err}`);
-        });
-        console.log("File written successfully!");
-    }
-
+    createFile () {
+        const newArray = [];
+        const data = JSON.stringify(newArray);
+        fs.writeFileSync(this.path, data, 'utf-8');
+    } 
     
-
-    readItemList () {
-        fs.readFile(this.path, 'utf-8', (error, result) => {    
-            return error ? console.log(`Error while reading the file ${err}`) : JSON.parse(result);    
-        });
+    getItemList () {
+        return JSON.parse(fs.readFileSync(this.path));
     }
 
     writeItemToList (list) {
         const newList = JSON.stringify(list);
-        fs.writeFile(this.path, newList, (error) => {
-            if(error) return console.log(`Error while writing the file: ${error}`);
-        });
+        fs.writeFileSync(this.path, newList, 'utf-8');
     }
     
     addProduct (productTitle, productDescription, productPrice, productThumbnail, productCode, productStock) {
 
+        const itemList = this.getItemList();
+
         let flag = true;
-        this.productArray.forEach( function(item){
+        itemList.forEach( function(item){
             item.code === productCode ? flag = false : flag = true;
             return flag;
         });
@@ -73,7 +67,8 @@ class ProductManager {
                 
                 const productId = ProductManager.id++;
 
-                this.productArray.push({title: productTitle, description: productDescription, price: productPrice, thumbnail: productThumbnail, code: productCode, stock: productStock, id: productId});
+                itemList.push({title: productTitle, description: productDescription, price: productPrice, thumbnail: productThumbnail, code: productCode, stock: productStock, id: productId});
+                this.writeItemToList(itemList);
                 console.log(`Product : ${productTitle} with code: ${productCode}, and ID: ${productId} added!`);
             } else {
                 console.log("Incomplete product information or you can't add a product with zero stock");
@@ -84,24 +79,90 @@ class ProductManager {
     }
 
     getProducts () {
-        return this.productArray;
+        return this.getItemList();
     }
 
     getProductById (id) {
-        const itemIndex = this.productArray.findIndex(itemIndex => itemIndex.id === id);
+
+        const itemList = this.getItemList();
+        const itemIndex = itemList.findIndex(itemIndex => itemIndex.id === id);
         if (itemIndex != -1){
-            return (this.productArray[itemIndex]);
+            return (itemList[itemIndex]);
         } else {
             console.log(`ID: ${id} not found!`);
         }
        
     }
+
+    deleteProduct (id) {
+        const itemList = this.getItemList();
+        const itemIndex = itemList.findIndex(itemIndex => itemIndex.id === id);
+        if (itemIndex != -1){
+            itemList.pop(itemIndex);
+            console.log(`Item with ID: ${id} removed!`);
+        } else {
+            console.log(`ID: ${id} not found!`);
+        }
+
+    }
+
+    updateProduct(id, field, fieldValue) {
+        const itemList = this.getItemList();
+        const itemIndex = itemList.findIndex(itemIndex => itemIndex.id === id);
+        if (itemIndex != -1){
+            itemList[itemIndex][field] = fieldValue;
+            this.writeItemToList(itemList);
+            console.log(`Item with ID: ${id}, updated field: ${field} with the value: ${fieldValue}`);
+        } else {
+            console.log(`ID: ${id} not found!`);
+        }
+
+    }
+
 }
+
 
 //Tests -------------------------------------------------------------------------------------------------------------------
 //Se creará una instancia de la clase “ProductManager”
-const productManagerOne = new ProductManager();
+file = "itemList.json";
 
-answer = productManagerOne.readItemList();
+const productManagerOne = new ProductManager(file);
 
-console.log(answer);
+//Se llamará “getProducts” recién creada la instancia, debe devolver un arreglo vacío []
+console.log(productManagerOne.getProducts());
+
+/*
+Se llamará al método “addProduct” con los campos:
+title: “producto prueba”
+description:”Este es un producto prueba”
+price:200,
+thumbnail:”Sin imagen”
+code:”abc123”,
+stock:25
+
+El objeto debe agregarse satisfactoriamente con un id generado automáticamente SIN REPETIRSE
+*/
+productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc123",25);
+productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc124",25);
+productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc125",25);
+productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc126",25);
+
+//Se llamará el método “getProducts” nuevamente, esta vez debe aparecer el producto recién agregado
+console.log(productManagerOne.getProducts());
+
+//Se llamará al método “addProduct” con los mismos campos de arriba, debe arrojar un error porque el código estará repetido.
+productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc123",25);
+
+//Se evaluará que getProductById devuelva error si no encuentra el producto o el producto en caso de encontrarlo
+console.log(productManagerOne.getProductById(0));
+
+productManagerOne.updateProduct(0, "code", "123aaa");
+
+console.log(productManagerOne.getProductById(0));
+
+//productManagerOne.deleteProduct(1);
+
+//productManagerOne.deleteProduct(5);
+
+//console.log(productManagerOne.getProducts());
+
