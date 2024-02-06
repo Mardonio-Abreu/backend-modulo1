@@ -90,20 +90,21 @@ class ProductManager {
             return (itemList[itemIndex]);
         } else {
             console.log(`ID: ${id} not found!`);
+            return -1;
         }
        
     }
 
     deleteProduct (id) {
-        const itemList = this.getItemList();
-        const itemIndex = itemList.findIndex(itemIndex => itemIndex.id === id);
-        if (itemIndex != -1){
-            itemList.pop(itemIndex);
-            console.log(`Item with ID: ${id} removed!`);
-        } else {
-            console.log(`ID: ${id} not found!`);
-        }
+        
+        let flag = this.getProductById(id);
 
+        if (flag !== -1){
+            let itemList = this.getItemList();
+            itemList = itemList.filter(item => item.id !== id);
+            this.writeItemToList(itemList);
+            console.log(`Item with ID: ${id} removed!`);
+        } 
     }
 
     updateProduct(id, field, fieldValue) {
@@ -129,40 +130,48 @@ file = "itemList.json";
 const productManagerOne = new ProductManager(file);
 
 //Se llamará “getProducts” recién creada la instancia, debe devolver un arreglo vacío []
+
 console.log(productManagerOne.getProducts());
 
-/*
-Se llamará al método “addProduct” con los campos:
+/*Se llamará al método “addProduct” con los campos:
 title: “producto prueba”
 description:”Este es un producto prueba”
 price:200,
 thumbnail:”Sin imagen”
 code:”abc123”,
 stock:25
+El objeto debe agregarse satisfactoriamente con un id generado automáticamente SIN REPETIRSE*/
 
-El objeto debe agregarse satisfactoriamente con un id generado automáticamente SIN REPETIRSE
-*/
-productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc123",25);
-productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc124",25);
-productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc125",25);
-productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc126",25);
+productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc123", 25);
+productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc124", 25);
+productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc125", 25);
+productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc126", 25);
 
 //Se llamará el método “getProducts” nuevamente, esta vez debe aparecer el producto recién agregado
+
 console.log(productManagerOne.getProducts());
 
-//Se llamará al método “addProduct” con los mismos campos de arriba, debe arrojar un error porque el código estará repetido.
-productManagerOne.addProduct( "producto prueba",  "Este es un producto prueba", 200, "Sin imagen", "abc123",25);
+//Se llamará al método “getProductById” y se corroborará que devuelva el producto con el id especificado, en caso de no existir, debe arrojar un error.
 
-//Se evaluará que getProductById devuelva error si no encuentra el producto o el producto en caso de encontrarlo
 console.log(productManagerOne.getProductById(0));
+
+productManagerOne.getProductById(10)
+
+
+
+//Se llamará al método “updateProduct” y se intentará cambiar un campo de algún producto, se evaluará que no se elimine el id y que sí se haya hecho la actualización.
 
 productManagerOne.updateProduct(0, "code", "123aaa");
 
 console.log(productManagerOne.getProductById(0));
 
-//productManagerOne.deleteProduct(1);
+//Se llamará al método “deleteProduct”, se evaluará que realmente se elimine el producto o que arroje un error en caso de no existir.
 
-//productManagerOne.deleteProduct(5);
+productManagerOne.deleteProduct(0);
+productManagerOne.deleteProduct(10);
 
-//console.log(productManagerOne.getProducts());
+console.log(productManagerOne.getProducts());
+
+
+
 
