@@ -1,4 +1,4 @@
-//Class that creates the shopping cart
+//Class that creates a shopping cart
 class Cart {
     
     static cartArray = [];
@@ -17,7 +17,7 @@ class Cart {
         return cart;
     }
 
-    
+
    
 
 

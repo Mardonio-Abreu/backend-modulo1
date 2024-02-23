@@ -1,4 +1,4 @@
-//Cart routes
+//Cart routes.
 const {Router} = require('express');
 const CartManager = require('../modules/cartManager');
 const FILE = './cartData.json'
