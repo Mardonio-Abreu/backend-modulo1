@@ -1,0 +1,21 @@
+<div>
+  <ul>
+    {{#each items}}
+      <li>{{this.title}}</li>
+    {{/each}}
+  </ul>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+
+<script>
+  let socket = io();
+  socket.on('messages', function () {
+    console.log('Connected to the server');
+    
+  });    
+</script>
+
+
+
